@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
-import Task from "../task/task.js";
+import Task from '../task/task.js'
 
-import "./taskList.css";
+import './taskList.css'
 
 export default class TaskList extends Component {
   render() {
-    const { todos, onDeleted, onToggleDone, onEdited, onFixTask } = this.props;
+    const { todos, onDeleted, onToggleDone, onEdited, onFixTask } = this.props
     const elements = todos.map((elem) => {
-      const { text, id, done, edit, date } = elem;
+      const { text, id, done, edit, date } = elem
 
       return (
         <Task
@@ -24,14 +24,14 @@ export default class TaskList extends Component {
           onToggleDone={() => onToggleDone(id)}
           onFixTask={onFixTask}
         />
-      );
-    });
+      )
+    })
 
     return (
       <section className="main">
         <ul className="todo-list">{elements}</ul>
       </section>
-    );
+    )
   }
 
   static propTypes = {
@@ -40,5 +40,5 @@ export default class TaskList extends Component {
     onEdited: PropTypes.func.isRequired,
     onToggleDone: PropTypes.func.isRequired,
     onFixTask: PropTypes.func.isRequired,
-  };
+  }
 }
