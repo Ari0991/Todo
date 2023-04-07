@@ -1,0 +1,44 @@
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+
+import Task from "../task/task.js";
+
+import "./taskList.css";
+
+export default class TaskList extends Component {
+  render() {
+    const { todos, onDeleted, onToggleDone, onEdited, onFixTask } = this.props;
+    const elements = todos.map((elem) => {
+      const { text, id, done, edit, date } = elem;
+
+      return (
+        <Task
+          key={id}
+          text={text}
+          id={id}
+          done={done}
+          edit={edit}
+          date={date}
+          onDeleted={() => onDeleted(id)}
+          onEdited={() => onEdited(id)}
+          onToggleDone={() => onToggleDone(id)}
+          onFixTask={onFixTask}
+        />
+      );
+    });
+
+    return (
+      <section className="main">
+        <ul className="todo-list">{elements}</ul>
+      </section>
+    );
+  }
+
+  static propTypes = {
+    todos: PropTypes.arrayOf(PropTypes.object),
+    onDeleted: PropTypes.func.isRequired,
+    onEdited: PropTypes.func.isRequired,
+    onToggleDone: PropTypes.func.isRequired,
+    onFixTask: PropTypes.func.isRequired,
+  };
+}
