@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import './todoApp.css'
+import './App.css'
 import NewTaskForm from '../newTaskForm/newTaskForm.js'
 import Footer from '../footer/footer.js'
 import TaskList from '../taskList/taskList.js'
@@ -14,16 +14,11 @@ export default class App extends Component {
 
   static propTypes = {}
 
-  searchIndex(id) {
-    let newTasks = structuredClone(this.state.tasks)
-    const index = newTasks.findIndex((elem) => elem.id === id)
-    return { newTasks, index }
-  }
-
   deleteItem = (id) => {
-    const { newTasks, index } = this.searchIndex(id)
-    newTasks.splice(index, 1)
-    this.setState(() => {
+    this.setState(({ tasks }) => {
+      const index = tasks.findIndex((elem) => elem.id === id)
+      let newTasks = structuredClone(this.state.tasks)
+      newTasks.splice(index, 1)
       return {
         tasks: newTasks,
       }
@@ -31,8 +26,8 @@ export default class App extends Component {
   }
 
   editItem = (id) => {
-    const { index } = this.searchIndex(id)
     this.setState(({ tasks }) => {
+      const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
       const newItem = { ...oldItem, edit: !oldItem.edit }
 
@@ -61,8 +56,8 @@ export default class App extends Component {
   }
 
   onToggleDone = (id) => {
-    const { index } = this.searchIndex(id)
     this.setState(({ tasks }) => {
+      const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
       const newItem = { ...oldItem, done: !oldItem.done }
 
@@ -103,8 +98,8 @@ export default class App extends Component {
   }
 
   fixTask = (id, text) => {
-    const { index } = this.searchIndex(id)
     this.setState(({ tasks }) => {
+      const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
       const newItem = { ...oldItem, text: text, edit: false }
 

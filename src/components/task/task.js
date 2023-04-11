@@ -49,7 +49,7 @@ export default class Task extends Component {
           <button type="button" className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
         <form onSubmit={this.submitFixTask}>
-          <input type="text" className="edit" value={this.state.value} onChange={this.valueChange}></input>
+          <input type="text" className="edit" value={this.state.value} onChange={this.valueChange} required></input>
         </form>
       </li>
     )

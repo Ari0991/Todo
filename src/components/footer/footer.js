@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 
 import './footer.css'
 
@@ -14,11 +15,9 @@ export default class Footer extends Component {
     const { allCount, doneCount, filter, onFilterChange, onClearCompleted } = this.props
 
     const buttons = this.buttons.map(({ name, text, type }) => {
-      const isActive = filter === name
-      const classText = isActive ? 'selected' : null
       return (
         <li key={name}>
-          <button type={type} name={name} className={classText} onClick={() => onFilterChange(name)}>
+          <button type={type} name={name} className={classNames(filter)} onClick={() => onFilterChange(name)}>
             {text}
           </button>
         </li>

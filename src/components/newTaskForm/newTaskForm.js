@@ -35,6 +35,7 @@ export default class NewTaskForm extends Component {
             autoFocus
             value={this.state.value}
             onChange={this.changeState}
+            required
           />
         </form>
       </header>
