@@ -12,16 +12,12 @@ export default class Footer extends Component {
   ]
 
   render() {
-    const { allCount, doneCount, onFilterChange, onClearCompleted } = this.props
+    const { allCount, doneCount, onFilterChange, filter, onClearCompleted } = this.props
 
     const buttons = this.buttons.map(({ name, text, type }) => {
       const buttonNames = classNames({
         // prettier-ignore
-        'all':name === 'all',
-        // prettier-ignore
-        'active':name === 'active',
-        // prettier-ignore
-        'completed':name === 'completed',
+        'selected': name === filter,
       })
 
       return (
