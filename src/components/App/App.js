@@ -90,9 +90,8 @@ export default class App extends Component {
   }
 
   clearCompleted = () => {
-    const newTasks = structuredClone(this.state.tasks).filter((elem) => !elem.done)
-
-    this.setState(() => {
+    this.setState(({ tasks }) => {
+      const newTasks = structuredClone(tasks).filter((elem) => !elem.done)
       return { tasks: newTasks }
     })
   }

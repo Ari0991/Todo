@@ -12,12 +12,16 @@ export default class Footer extends Component {
   ]
 
   render() {
-    const { allCount, doneCount, filter, onFilterChange, onClearCompleted } = this.props
-
+    const { allCount, doneCount, onFilterChange, onClearCompleted } = this.props
+    const buttonClass = classNames({
+      all: this.buttons.name === 'all',
+      active: this.buttons.name === 'active',
+      completed: this.buttons.name === 'completed',
+    })
     const buttons = this.buttons.map(({ name, text, type }) => {
       return (
         <li key={name}>
-          <button type={type} name={name} className={classNames(filter)} onClick={() => onFilterChange(name)}>
+          <button type={type} name={name} className={buttonClass} onClick={() => onFilterChange(name)}>
             {text}
           </button>
         </li>
