@@ -36,17 +36,26 @@ export default class App extends Component {
     })
   }
 
-  createItem(text) {
+  checkFormat = (num) => {
+    if (num.length < 2) {
+      return `0${num}`
+    }
+    return num
+  }
+
+  createItem(text, min, sec) {
     return {
       text: text,
       id: `${this.maxId++}_id`,
+      min: this.checkFormat(min),
+      sec: this.checkFormat(sec),
       done: false,
       edit: false,
       date: new Date(),
     }
   }
-  addItem = (value) => {
-    const newItem = this.createItem(value)
+  addItem = (value, min, sec) => {
+    const newItem = this.createItem(value, min, sec)
     this.setState(({ tasks }) => {
       const newTasks = [newItem, ...tasks]
       return {
@@ -115,6 +124,7 @@ export default class App extends Component {
     const doneCount = this.countTasks(tasks).doneCount
 
     const filteredTasks = this.filterItems(tasks, filter)
+
     return (
       <section className="todoapp">
         <NewTaskForm addItem={this.addItem} />

@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 import './task.css'
 
+import Timer from '../timer/timer.js'
+
 export default class Task extends Component {
   state = {
     value: this.props.text,
@@ -28,21 +30,21 @@ export default class Task extends Component {
   }
 
   render() {
-    const { text, id, done, edit, date, onDeleted, onToggleDone, onEdited } = this.props
-
+    const { text, id, done, edit, date, onDeleted, onToggleDone, onEdited, min, sec } = this.props
     const addDate = formatDistanceToNow(date, {
       includeSeconds: true,
       addSuffix: true,
     })
-
     return (
       <li className={this.classChange(done, edit)}>
         <div className="view">
           <div className="clicable" onClick={onToggleDone}>
             <input id={id} type="checkbox" className="toggle" />
             <label htmlFor={id} onClick={onToggleDone}>
-              <span className="description">{text}</span>
-              <span className="created">created {addDate}</span>
+              <span className="title">{text}</span>
+              <Timer min={min} sec={sec} check={this.classChange(done, edit)}></Timer>
+
+              <span className="description">created {addDate}</span>
             </label>
           </div>
           <button type="button" className="icon icon-edit" onClick={onEdited}></button>
