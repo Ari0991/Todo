@@ -8,7 +8,7 @@ export default class TaskList extends Component {
   render() {
     const { todos, onDeleted, onToggleDone, onEdited, onFixTask } = this.props
     const elements = todos.map((elem) => {
-      const { text, id, done, edit, date } = elem
+      const { text, id, done, edit, date, min, sec } = elem
 
       return (
         <Task
@@ -18,6 +18,8 @@ export default class TaskList extends Component {
           done={done}
           edit={edit}
           date={date}
+          min={min}
+          sec={sec}
           onDeleted={() => onDeleted(id)}
           onEdited={() => onEdited(id)}
           onToggleDone={() => onToggleDone(id)}
