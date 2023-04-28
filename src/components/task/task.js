@@ -35,6 +35,7 @@ export default class Task extends Component {
       includeSeconds: true,
       addSuffix: true,
     })
+
     return (
       <li className={this.classChange(done, edit)}>
         <div className="view">

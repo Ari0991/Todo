@@ -37,7 +37,7 @@ export default class App extends Component {
   }
 
   checkFormat = (num) => {
-    if (num.length < 2) {
+    if (num.length === 1) {
       return `0${num}`
     }
     return num
