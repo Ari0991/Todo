@@ -14,18 +14,22 @@ export default class Timer extends Component {
         return { min: Number(newMin) - 1 }
       })
     } else {
+      this.setState({ sec: '00' })
       clearTimeout(this.secTimer)
     }
   }
 
-  secLeft = () => {
-    const { min, sec } = this.state
+  secLeft = (min, sec) => {
+    const OldNow = new Date().getTime()
 
     this.secTimer = setTimeout(() => {
-      let secLeft = Number(sec) - 1
-      if (secLeft >= 0) {
-        secLeft >= 10 ? this.setState({ sec: secLeft }) : this.setState({ sec: `0${secLeft}` })
-      } else {
+      const start = Number(structuredClone(sec))
+
+      const newNow = new Date().getTime()
+      const difference = (newNow - OldNow) / 1000
+      sec.length > 1 ? this.setState({ sec: start - difference }) : this.setState({ sec: `0${start - difference}` })
+
+      if (Math.floor(sec) === 0 || Number(sec) < 0) {
         this.setState({ sec: 59 })
         this.minLeft(min)
       }
@@ -46,19 +50,19 @@ export default class Timer extends Component {
 
   render() {
     const { min, sec, pause } = this.state
-    const { check } = this.props
 
+    const { check } = this.props
     if (pause || check === 'completed') {
       clearTimeout(this.secTimer)
     } else if (!pause) {
-      this.secLeft()
+      this.secLeft(min, sec)
     }
 
     return (
       <span className="description">
         <button className="icon icon-play" onClick={this.setPlay}></button>
         <button className="icon icon-pause" onClick={this.setPause}></button>
-        <span>{`${min}:${sec}`}</span>
+        <span>{Number(sec) >= 10 ? `${min}:${Math.trunc(sec)}` : `${min}:0${Math.trunc(sec)}`}</span>
       </span>
     )
   }
