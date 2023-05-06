@@ -30,7 +30,8 @@ export default class Task extends Component {
   }
 
   render() {
-    const { text, id, done, edit, date, onDeleted, onToggleDone, onEdited, min, sec } = this.props
+    const { text, id, done, edit, date, onDeleted, onToggleDone, onEdited, min, sec, getTime, tick } = this.props
+
     const addDate = formatDistanceToNow(date, {
       includeSeconds: true,
       addSuffix: true,
@@ -43,7 +44,14 @@ export default class Task extends Component {
             <input id={id} type="checkbox" className="toggle" />
             <label htmlFor={id} onClick={onToggleDone}>
               <span className="title">{text}</span>
-              <Timer min={min} sec={sec} check={this.classChange(done, edit)}></Timer>
+              <Timer
+                min={min}
+                sec={sec}
+                check={this.classChange(done, edit)}
+                getTime={getTime}
+                id={id}
+                tick={tick}
+              ></Timer>
 
               <span className="description">created {addDate}</span>
             </label>

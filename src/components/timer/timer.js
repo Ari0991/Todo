@@ -4,7 +4,15 @@ export default class Timer extends Component {
   state = {
     min: this.props.min,
     sec: this.props.sec,
-    pause: true,
+    pause: false,
+    getTime: false,
+  }
+
+  componentDidUpdate() {
+    if (this.state.min < 0) {
+      const newMin = '00'
+      this.setState({ min: newMin })
+    }
   }
 
   minLeft = (min) => {
@@ -14,15 +22,16 @@ export default class Timer extends Component {
         return { min: Number(newMin) - 1 }
       })
     } else {
-      this.setState({ sec: '00' })
+      this.setState({ min: '00', sec: '00' })
       clearTimeout(this.secTimer)
     }
   }
 
-  secLeft = (min, sec) => {
+  timeLeft = (min, sec, id) => {
     const OldNow = new Date().getTime()
 
     this.secTimer = setTimeout(() => {
+      this.props.tick(id, min, sec)
       const start = Number(structuredClone(sec))
 
       const newNow = new Date().getTime()
@@ -48,14 +57,17 @@ export default class Timer extends Component {
     clearTimeout(this.secTimer)
   }
 
+  changeTime(id, min, sec) {
+    this.props.getTime(id, min, sec)
+  }
+
   render() {
     const { min, sec, pause } = this.state
-
-    const { check } = this.props
+    const { check, id } = this.props
     if (pause || check === 'completed') {
       clearTimeout(this.secTimer)
     } else if (!pause) {
-      this.secLeft(min, sec)
+      this.timeLeft(min, sec, id)
     }
 
     return (

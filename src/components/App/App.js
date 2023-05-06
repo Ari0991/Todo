@@ -6,7 +6,6 @@ import Footer from '../footer/footer.js'
 import TaskList from '../taskList/taskList.js'
 
 export default class App extends Component {
-  maxId = 0
   state = {
     tasks: [],
     filter: 'all',
@@ -44,14 +43,18 @@ export default class App extends Component {
   }
 
   createItem(text, min, sec) {
+    const cutText = text.slice(0, 4)
+    const id = `${cutText}${min}${sec}_id`
+
     return {
       text: text,
-      id: `${this.maxId++}_id`,
+      id: id,
       min: this.checkFormat(min),
       sec: this.checkFormat(sec),
       done: false,
       edit: false,
       date: new Date(),
+      pause: true,
     }
   }
   addItem = (value, min, sec) => {
@@ -117,6 +120,18 @@ export default class App extends Component {
     })
   }
 
+  tick = (id, min, sec) => {
+    this.setState(({ tasks }) => {
+      const index = tasks.findIndex((elem) => elem.id === id)
+      const before = tasks.slice(0, index)
+      const after = tasks.slice(index + 1)
+      const oldItem = tasks[index]
+      const newItem = { ...oldItem, min: min, sec: sec }
+      const newTasks = [...before, newItem, ...after]
+      return { tasks: newTasks }
+    })
+  }
+
   render() {
     const { tasks, filter } = this.state
 
@@ -134,6 +149,9 @@ export default class App extends Component {
           onEdited={this.editItem}
           onToggleDone={this.onToggleDone}
           onFixTask={this.fixTask}
+          getTime={this.getTime}
+          filter={filter}
+          tick={this.tick}
         />
         <Footer
           allCount={allCount}
