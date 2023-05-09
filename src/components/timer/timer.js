@@ -1,81 +1,73 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 
-export default class Timer extends Component {
-  state = {
-    min: this.props.min,
-    sec: this.props.sec,
-    pause: false,
-    getTime: false,
+const Timer = ({ min, sec, id, tick, done } = this.state) => {
+  const [minutes, setMinutes] = useState(min)
+  const [seconds, setSeconds] = useState(sec)
+  const [pause, setPause] = useState(false)
+
+  let secTimer = seconds
+
+  if (minutes < 0) {
+    const newMin = '00'
+    setMinutes(newMin)
   }
 
-  componentDidUpdate() {
-    if (this.state.min < 0) {
-      const newMin = '00'
-      this.setState({ min: newMin })
-    }
+  if (seconds < 0) {
+    const newSec = '00'
+    setSeconds(newSec)
   }
 
-  minLeft = (min) => {
-    if (Number(min) > 0) {
-      this.setState(({ min }) => {
-        const newMin = structuredClone(min)
-        return { min: Number(newMin) - 1 }
+  const minLeft = (minutes) => {
+    if (Number(minutes) > 0) {
+      setMinutes((minutes) => {
+        const newMin = structuredClone(minutes)
+        return Number(newMin) - 1
       })
     } else {
-      this.setState({ min: '00', sec: '00' })
-      clearTimeout(this.secTimer)
+      setMinutes('00')
+      setSeconds('00')
+      clearTimeout(secTimer)
     }
   }
 
-  timeLeft = (min, sec, id) => {
+  const timeLeft = (min, sec, id) => {
     const OldNow = new Date().getTime()
 
-    this.secTimer = setTimeout(() => {
-      this.props.tick(id, min, sec)
+    secTimer = setTimeout(() => {
+      tick(id, min, sec)
       const start = Number(structuredClone(sec))
-
       const newNow = new Date().getTime()
       const difference = (newNow - OldNow) / 1000
-      sec.length > 1 ? this.setState({ sec: start - difference }) : this.setState({ sec: `0${start - difference}` })
+      sec.length > 1 ? setSeconds(start - difference) : setSeconds(`0${start - difference}`)
 
       if (Math.floor(sec) === 0 || Number(sec) < 0) {
-        this.setState({ sec: 59 })
-        this.minLeft(min)
+        setSeconds(59)
+        minLeft(min)
       }
+      return clearTimeout(secTimer)
     }, 1000)
   }
 
-  setPause = () => {
-    this.setState({ pause: true })
+  const clickPause = () => {
+    setPause(true)
   }
 
-  setPlay = () => {
-    this.setState({ pause: false })
+  const clickPlay = () => {
+    setPause(false)
   }
 
-  componentWillUnmount() {
-    clearTimeout(this.secTimer)
+  if (pause || done) {
+    clearTimeout(secTimer)
+  } else if (!pause) {
+    timeLeft(minutes, seconds, id)
   }
 
-  changeTime(id, min, sec) {
-    this.props.getTime(id, min, sec)
-  }
-
-  render() {
-    const { min, sec, pause } = this.state
-    const { check, id } = this.props
-    if (pause || check === 'completed') {
-      clearTimeout(this.secTimer)
-    } else if (!pause) {
-      this.timeLeft(min, sec, id)
-    }
-
-    return (
-      <span className="description">
-        <button className="icon icon-play" onClick={this.setPlay}></button>
-        <button className="icon icon-pause" onClick={this.setPause}></button>
-        <span>{Number(sec) >= 10 ? `${min}:${Math.trunc(sec)}` : `${min}:0${Math.trunc(sec)}`}</span>
-      </span>
-    )
-  }
+  return (
+    <span className="description">
+      <button className="icon icon-play" onClick={clickPlay}></button>
+      <button className="icon icon-pause" onClick={clickPause}></button>
+      <span>{Number(seconds) >= 10 ? `${minutes}:${Math.floor(seconds)}` : `${minutes}:0${Math.floor(seconds)}`}</span>
+    </span>
+  )
 }
+export default Timer
