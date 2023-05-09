@@ -6,7 +6,9 @@ const Timer = ({ min, sec, id, tick, done } = this.state) => {
   const [pause, setPause] = useState(false)
 
   let secTimer = seconds
-
+  useEffect(() => {
+    return () => clearTimeout(secTimer)
+  })
   if (minutes < 0) {
     const newMin = '00'
     setMinutes(newMin)
