@@ -3,6 +3,14 @@
     "browser": true,
     "es2021": true
   },
+  "overrides": [
+    {
+      "files": ["*.tsx"],
+      "rules": {
+        "no-undef": "off"
+      }
+    }
+  ],
   "ignorePatterns": ["node_modules", "dist", "build"],
   "extends": [
     "eslint:recommended",
@@ -29,7 +37,7 @@
     "react/react-in-jsx-scope": "off",
     "react/prop-types": 0,
     "import/no-unresolved": [2, { "caseSensitive": false }],
-    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".ts", ".tsx"] }],
     "import/order": [
       2,
       {
