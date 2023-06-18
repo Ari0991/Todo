@@ -1,57 +1,58 @@
 import React, { useState, useEffect } from 'react'
 
-interface TimerProps {
-  min: string
-  sec: string
-  id: number
-  tick: (id: number, min: string, sec: string) => void
+type Iprops = {
+  min: number
+  sec: number
+  id: string
+  tick: (id: string, min: number, sec: number) => void
   done: boolean
 }
 
-const Timer = ({ min, sec, id, tick, done }: TimerProps) => {
+const Timer = ({ min, sec, id, tick, done }: Iprops) => {
   const [minutes, setMinutes] = useState(min)
   const [seconds, setSeconds] = useState(sec)
   const [pause, setPause] = useState(false)
 
   let secTimer: any = seconds
   useEffect(() => {
+    console.log('clear timeout')
     return () => clearTimeout(secTimer)
   })
-  if (Number(minutes) < 0) {
-    const newMin = '00'
+  if (minutes < 0) {
+    const newMin = 0
     setMinutes(newMin)
   }
 
-  if (Number(seconds) < 0) {
-    const newSec = '00'
+  if (seconds < 0) {
+    const newSec = 0
     setSeconds(newSec)
   }
 
-  const minLeft = (minutes: string) => {
-    if (Number(minutes) > 0) {
+  const minLeft = (minutes: number) => {
+    if (minutes > 0) {
       setMinutes((minutes) => {
         const newMin = structuredClone(minutes)
-        return (Number(newMin) - 1).toString()
+        return Number(newMin) - 1
       })
     } else {
-      setMinutes('00')
-      setSeconds('00')
+      setMinutes(0)
+      setSeconds(0)
       clearTimeout(secTimer)
     }
   }
 
-  const timeLeft = (min: string, sec: string, id: number) => {
+  const timeLeft = (min: number, sec: number, id: string) => {
     const OldNow = new Date().getTime()
 
     secTimer = setTimeout(() => {
       tick(id, min, sec)
-      const start = Number(structuredClone(sec))
+      const start = structuredClone(sec)
       const newNow = new Date().getTime()
       const difference = (newNow - OldNow) / 1000
-      sec.length > 1 ? setSeconds((start - difference).toString()) : setSeconds(`0${start - difference}`)
+      sec.toString().length > 1 ? setSeconds(start - difference) : setSeconds(start - difference)
 
-      if (Math.floor(Number(sec)) === 0 || Number(sec) < 0) {
-        setSeconds('59')
+      if (Math.floor(sec) === 0 || Number(sec) < 0) {
+        setSeconds(59)
         minLeft(min)
       }
       return clearTimeout(secTimer)
@@ -76,11 +77,7 @@ const Timer = ({ min, sec, id, tick, done }: TimerProps) => {
     <span className="description">
       <button className="icon icon-play" onClick={clickPlay}></button>
       <button className="icon icon-pause" onClick={clickPause}></button>
-      <span>
-        {Number(seconds) >= 10
-          ? `${minutes}:${Math.floor(Number(seconds))}`
-          : `${minutes}:0${Math.floor(Number(seconds))}`}
-      </span>
+      <span>{Number(seconds) >= 10 ? `${minutes}:${Math.floor(seconds)}` : `${minutes}:0${Math.floor(seconds)}`}</span>
     </span>
   )
 }

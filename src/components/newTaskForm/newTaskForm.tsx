@@ -4,28 +4,29 @@ import { Alert } from 'antd'
 
 import './newTaskForm.css'
 
-const NewTaskForm = ({ addItem }) => {
-  const [value, setValue] = useState('')
-  const [minutes, setMinutes] = useState('')
-  const [seconds, setSeconds] = useState('')
-  const [correctTime, setCorrectTime] = useState(true)
+type IAddItem = {
+  addItem: (value: string, min: number, sec: number) => void
+}
 
-  const changeState = (evt) => {
+const NewTaskForm = ({ addItem }: IAddItem) => {
+  const [value, setValue] = useState<string>('')
+  const [minutes, setMinutes] = useState<string>('')
+  const [seconds, setSeconds] = useState<string>('')
+  const [correctTime, setCorrectTime] = useState<boolean>(true)
+
+  const changeState = (evt: any) => {
     setValue(evt.target.value)
   }
 
-  const changeMin = (evt) => {
+  const changeMin = (evt: any) => {
     setMinutes(trimValue(evt.target.value))
   }
 
-  const changeSec = (evt) => {
+  const changeSec = (evt: any) => {
     setSeconds(trimValue(evt.target.value))
   }
 
-  const timeCheck = (minutes, seconds) => {
-    const min = Number(minutes)
-    const sec = Number(seconds)
-
+  const timeCheck = (min: number, sec: number) => {
     if (min > 60 || sec > 60) {
       return false
     } else if (min === 60 && sec > 0) {
@@ -34,18 +35,18 @@ const NewTaskForm = ({ addItem }) => {
     return true
   }
 
-  const trimValue = (value) => {
+  const trimValue = (value: string) => {
     return value.trim()
   }
 
-  const submitValue = (evt) => {
+  const submitValue = (evt: any) => {
     evt.preventDefault()
-    const verify = timeCheck(minutes, seconds)
+    const verify = timeCheck(Number(minutes), Number(seconds))
 
     if (!verify) {
       return setCorrectTime(false)
     } else if (verify && trimValue(value) !== '') {
-      addItem(value, minutes, seconds)
+      addItem(value, Number(minutes), Number(seconds))
       setValue('')
       setSeconds('')
       setMinutes('')
@@ -80,7 +81,7 @@ const NewTaskForm = ({ addItem }) => {
           className="new-todo-form__timer"
           placeholder="Min"
           autoFocus
-          maxLength="2"
+          maxLength={2}
           onChange={changeMin}
           value={minutes}
           pattern="[0-9]{1,2}"
@@ -90,7 +91,7 @@ const NewTaskForm = ({ addItem }) => {
           className="new-todo-form__timer"
           placeholder="Sec"
           autoFocus
-          maxLength="2"
+          maxLength={2}
           onChange={changeSec}
           value={seconds}
           pattern="[0-9]{1,2}"

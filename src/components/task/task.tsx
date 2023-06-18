@@ -1,14 +1,30 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { formatDistanceToNow } from 'date-fns'
 import './task.css'
 
-import Timer from '../timer/timer.js'
+import Timer from '../timer/timer'
 
-const Task = ({ text, id, done, edit, date, onDeleted, onToggleDone, onEdited, onFixTask, min, sec, tick }) => {
-  const [value, setValue] = useState(text)
+type IProps = {
+  text: string
+  id: string
+  min: string | number
+  sec: string | number
+  done: boolean
+  edit: boolean
+  date: Date
+  pause: boolean
 
-  const classChange = (done, edit) => {
+  onDeleted?: any
+  onToggleDone?: any
+  onEdited?: any
+  onFixTask?: any
+  tick?: any
+}
+
+const Task = ({ text, id, done, edit, date, min, sec, onDeleted, onToggleDone, onEdited, onFixTask, tick }: IProps) => {
+  const [value, setValue] = useState<string>(text)
+
+  const classChange = (done: boolean, edit: boolean): string => {
     let classNames = ''
     if (done) {
       classNames = 'completed'
@@ -17,11 +33,11 @@ const Task = ({ text, id, done, edit, date, onDeleted, onToggleDone, onEdited, o
     }
     return classNames
   }
-  const valueChange = (evt) => {
+  const valueChange = (evt: any) => {
     setValue(evt.target.value)
   }
 
-  const submitFixTask = (evt) => {
+  const submitFixTask = (evt: any) => {
     evt.preventDefault()
     onFixTask(id, value)
   }
@@ -35,10 +51,10 @@ const Task = ({ text, id, done, edit, date, onDeleted, onToggleDone, onEdited, o
     <li className={classChange(done, edit)}>
       <div className="view">
         <div className="clicable" onClick={onToggleDone}>
-          <input id={id} type="checkbox" className="toggle" />
-          <label htmlFor={id} onClick={onToggleDone}>
+          <input id={id.toString()} type="checkbox" className="toggle" />
+          <label htmlFor={id.toString()} onClick={onToggleDone}>
             <span className="title">{text}</span>
-            <Timer min={min} sec={sec} id={id} tick={tick} done={done}></Timer>
+            <Timer min={Number(min)} sec={Number(sec)} id={id} tick={tick} done={done}></Timer>
 
             <span className="description">created {addDate}</span>
           </label>
@@ -51,14 +67,6 @@ const Task = ({ text, id, done, edit, date, onDeleted, onToggleDone, onEdited, o
       </form>
     </li>
   )
-}
-
-Task.propTypes = {
-  text: PropTypes.string,
-  id: PropTypes.string,
-  done: PropTypes.bool,
-  edit: PropTypes.bool,
-  date: PropTypes.any,
 }
 
 Task.defaultProps = {

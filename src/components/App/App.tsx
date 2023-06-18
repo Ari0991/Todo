@@ -1,16 +1,29 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
+
+import NewTaskForm from '../newTaskForm/newTaskForm'
+import Footer from '../footer/footer'
+import TaskList from '../taskList/taskList'
 
 import './App.css'
-import NewTaskForm from '../newTaskForm/newTaskForm.js'
-import Footer from '../footer/footer.js'
-import TaskList from '../taskList/taskList.js'
 
-const App = () => {
-  const [tasks, setTasks] = useState([])
+type ITasks = {
+  text: string
+  id: string
+  min: string | number
+  sec: string | number
+  done: boolean
+  edit: boolean
+  date: Date
+  pause: boolean
+  findIndex?: () => boolean
+  splice?: () => []
+}
+
+export const App = () => {
+  const [tasks, setTasks] = useState<ITasks[] | []>([])
   const [filter, setFilter] = useState('all')
 
-  const deleteItem = (id) => {
+  const deleteItem = (id: string) => {
     setTasks((tasks) => {
       const index = tasks.findIndex((elem) => elem.id === id)
       let newTasks = structuredClone(tasks)
@@ -19,7 +32,7 @@ const App = () => {
     })
   }
 
-  const editItem = (id) => {
+  const editItem: any = (id: string) => {
     setTasks((tasks) => {
       const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
@@ -30,16 +43,17 @@ const App = () => {
     })
   }
 
-  const checkFormat = (num) => {
-    if (num.length === 1) {
+  const checkFormat = (num: number): string | number => {
+    if (num.toString().length === 1) {
       return `0${num}`
     }
     return num
   }
 
-  const createItem = (text, min, sec) => {
-    const cutText = text.slice(0, 4)
-    const id = `${cutText}${min}${sec}_id`
+  const createItem = (text: string, min: number, sec: number): ITasks => {
+    console.log(text, min, sec)
+
+    const id = `${text}${min}${sec}_id`
 
     return {
       text: text,
@@ -52,16 +66,16 @@ const App = () => {
       pause: true,
     }
   }
-  const addItem = (value, min, sec) => {
+  const addItem = (value: string, min: number, sec: number): void => {
     const newItem = createItem(value, min, sec)
 
     setTasks((tasks) => {
-      const newTasks = [newItem, ...tasks]
+      const newTasks: ITasks[] = [newItem, ...tasks]
       return newTasks
     })
   }
 
-  const onToggleDone = (id) => {
+  const onToggleDone = (id: string): void => {
     setTasks((tasks) => {
       const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
@@ -72,18 +86,18 @@ const App = () => {
     })
   }
 
-  const countTasks = (arr) => {
+  const countTasks = (arr: ITasks[]): { allCount: number; doneCount: number } => {
     return {
       allCount: arr.length,
       doneCount: arr.filter((elem) => elem.done === true).length,
     }
   }
 
-  const onFilterChange = (name) => {
+  const onFilterChange = (name: string): void => {
     setFilter(name)
   }
 
-  const filterItems = (items, filter) => {
+  const filterItems = (items: ITasks[], filter: string): ITasks[] | undefined => {
     if (filter === 'all') {
       return items
     } else if (filter === 'completed') {
@@ -100,7 +114,7 @@ const App = () => {
     })
   }
 
-  const fixTask = (id, text) => {
+  const fixTask = (id: string, text: string) => {
     setTasks((tasks) => {
       const index = tasks.findIndex((elem) => elem.id === id)
       const oldItem = tasks[index]
@@ -112,7 +126,7 @@ const App = () => {
     })
   }
 
-  const tick = (id, min, sec) => {
+  const tick = (id: string, min: number, sec: number): void => {
     setTasks((tasks) => {
       const index = tasks.findIndex((elem) => elem.id === id)
       const before = tasks.slice(0, index)
@@ -150,10 +164,3 @@ const App = () => {
     </section>
   )
 }
-
-App.propTypes = {
-  tasks: PropTypes.array,
-  filter: PropTypes.string,
-}
-
-export default App
