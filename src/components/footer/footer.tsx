@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
 import './footer.css'
 
-export default class Footer extends Component {
+type IProps = {
+  allCount: number
+  doneCount: number
+  filter: string
+  onFilterChange: (name: string) => void
+  onClearCompleted: () => void
+}
+
+export default class Footer extends Component<IProps> {
   buttons = [
     { name: 'all', text: 'All' },
     { name: 'active', text: 'Active' },
@@ -14,7 +21,7 @@ export default class Footer extends Component {
   render() {
     const { allCount, doneCount, onFilterChange, filter, onClearCompleted } = this.props
 
-    const buttons = this.buttons.map(({ name, text, type }) => {
+    const buttons = this.buttons.map(({ name, text }) => {
       const buttonNames = classNames({
         // prettier-ignore
         'selected': name === filter,
@@ -22,7 +29,7 @@ export default class Footer extends Component {
 
       return (
         <li key={name}>
-          <button type={type} name={name} className={buttonNames} onClick={() => onFilterChange(name)}>
+          <button name={name} className={buttonNames} onClick={() => onFilterChange(name)}>
             {text}
           </button>
         </li>
@@ -43,12 +50,5 @@ export default class Footer extends Component {
     allCount: 0,
     doneCount: 0,
     filter: 'all',
-  }
-  static propTypes = {
-    allCount: PropTypes.number,
-    doneCount: PropTypes.number,
-    filter: PropTypes.string,
-    onFilterChange: PropTypes.func.isRequired,
-    onClearCompleted: PropTypes.func.isRequired,
   }
 }

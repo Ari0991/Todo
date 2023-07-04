@@ -1,46 +1,55 @@
 import React, { useState, useEffect } from 'react'
 
-const Timer = ({ min, sec, id, tick, done } = this.state) => {
+type Iprops = {
+  min: number
+  sec: number
+  id: string
+  tick: (id: string, min: number, sec: number) => void
+  done: boolean
+}
+
+const Timer = ({ min, sec, id, tick, done }: Iprops) => {
   const [minutes, setMinutes] = useState(min)
   const [seconds, setSeconds] = useState(sec)
   const [pause, setPause] = useState(false)
 
-  let secTimer = seconds
+  let secTimer: any = seconds
   useEffect(() => {
+    console.log('clear timeout')
     return () => clearTimeout(secTimer)
   })
   if (minutes < 0) {
-    const newMin = '00'
+    const newMin = 0
     setMinutes(newMin)
   }
 
   if (seconds < 0) {
-    const newSec = '00'
+    const newSec = 0
     setSeconds(newSec)
   }
 
-  const minLeft = (minutes) => {
-    if (Number(minutes) > 0) {
+  const minLeft = (minutes: number) => {
+    if (minutes > 0) {
       setMinutes((minutes) => {
         const newMin = structuredClone(minutes)
         return Number(newMin) - 1
       })
     } else {
-      setMinutes('00')
-      setSeconds('00')
+      setMinutes(0)
+      setSeconds(0)
       clearTimeout(secTimer)
     }
   }
 
-  const timeLeft = (min, sec, id) => {
+  const timeLeft = (min: number, sec: number, id: string) => {
     const OldNow = new Date().getTime()
 
     secTimer = setTimeout(() => {
       tick(id, min, sec)
-      const start = Number(structuredClone(sec))
+      const start = structuredClone(sec)
       const newNow = new Date().getTime()
       const difference = (newNow - OldNow) / 1000
-      sec.length > 1 ? setSeconds(start - difference) : setSeconds(`0${start - difference}`)
+      sec.toString().length > 1 ? setSeconds(start - difference) : setSeconds(start - difference)
 
       if (Math.floor(sec) === 0 || Number(sec) < 0) {
         setSeconds(59)
